@@ -1,0 +1,1 @@
+enum SearchSheetType { singleSelect, multiSelect }
