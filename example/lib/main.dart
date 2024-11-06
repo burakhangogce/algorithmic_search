@@ -59,8 +59,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<String> items = ["Apple", "Banana", "Cherry", "Date", "Elderberry"];
-  final SearchSheetController<String> controller = SearchSheetController(type: SearchSheetType.multiSelect);
+  final List<String> items = [
+    "Apple",
+    "Banana",
+    "Cherry",
+    "Date",
+    "Elderberry"
+  ];
+  final SearchSheetController<String> controller =
+      SearchSheetController(type: SearchSheetType.multiSelect);
 
   @override
   Widget build(BuildContext context) {
@@ -84,14 +91,17 @@ class _MyHomePageState extends State<MyHomePage> {
         child: SearchSheet<String>(
           items: items,
           controller: controller,
-          searchCriteria: (item, query) => item.toLowerCase().contains(query.toLowerCase()),
+          searchCriteria: (item, query) =>
+              item.toLowerCase().contains(query.toLowerCase()),
           itemBuilder: (context, item) => ListTile(
             title: Text(item),
             trailing: Consumer<SearchSheetController<String>>(
               builder: (context, controller, child) {
                 return Icon(
                   Icons.check_circle,
-                  color: controller.selectedItems.contains(item) ? Colors.green : Colors.grey,
+                  color: controller.selectedItems.contains(item)
+                      ? Colors.green
+                      : Colors.grey,
                 );
               },
             ),
