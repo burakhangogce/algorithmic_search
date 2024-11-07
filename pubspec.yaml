@@ -1,7 +1,7 @@
 name: algorithmic_search
-description: "A new Flutter package project."
+description: "A versatile Flutter package providing a customizable search sheet widget for single and multi-select functionality, with support for custom search criteria, selection management, and flexible UI configurations."
 version: 0.0.1
-homepage:
+homepage: https://github.com/burakhangogce/algorithmic_search
 
 environment:
   sdk: '>=2.18.2 <4.0.0'
