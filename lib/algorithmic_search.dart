@@ -5,22 +5,52 @@ import 'package:algorithmic_search/enums/search_sheet_type.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// `SearchSheet` is a widget for handling search and selection functionality.
+/// Supports both single selection (`singleSelect`) and multiple selection (`multiSelect`) modes.
 class SearchSheet<T> extends StatefulWidget {
+  /// List of items to display and search through.
   final List<T> items;
-  final SearchSheetController<T> controller;
-  final bool asDialog;
-  final double height;
-  final double width;
-  final bool Function(T item, String query) searchCriteria;
-  final Widget Function(BuildContext context, T item) itemBuilder;
-  final void Function(T item)? onItemSelected;
-  final InputDecoration? searchFieldDecoration;
-  final String labelText;
-  final EdgeInsets padding;
-  final double spacing;
-  final double runSpacing;
-  final bool showSelectedItems; // Seçili öğeleri gösterme kontrolü
 
+  /// The controller managing selection actions.
+  final SearchSheetController<T> controller;
+
+  /// Determines if the widget should function as a dialog or a full page.
+  final bool asDialog;
+
+  /// The height of the widget when used as a dialog.
+  final double height;
+
+  /// The width of the widget when used as a dialog.
+  final double width;
+
+  /// Function defining the search criteria.
+  final bool Function(T item, String query) searchCriteria;
+
+  /// Builder function for each item widget.
+  final Widget Function(BuildContext context, T item) itemBuilder;
+
+  /// Callback when an item is selected.
+  final void Function(T item)? onItemSelected;
+
+  /// Decoration for the search field.
+  final InputDecoration? searchFieldDecoration;
+
+  /// Label text for the search field.
+  final String labelText;
+
+  /// Padding around the widget.
+  final EdgeInsets padding;
+
+  /// Horizontal spacing between selected items.
+  final double spacing;
+
+  /// Vertical spacing between selected items.
+  final double runSpacing;
+
+  /// Controls whether selected items are shown at the top.
+  final bool showSelectedItems;
+
+  /// Creates a new `SearchSheet`.
   const SearchSheet({
     super.key,
     required this.items,
@@ -32,11 +62,11 @@ class SearchSheet<T> extends StatefulWidget {
     this.height = 500,
     this.width = double.infinity,
     this.searchFieldDecoration,
-    this.labelText = "Arama",
+    this.labelText = "Search",
     this.padding = const EdgeInsets.all(16.0),
     this.spacing = 8.0,
     this.runSpacing = 4.0,
-    this.showSelectedItems = true, // Varsayılan olarak açık
+    this.showSelectedItems = true,
   });
 
   @override
@@ -44,7 +74,10 @@ class SearchSheet<T> extends StatefulWidget {
 }
 
 class SearchSheetState<T> extends State<SearchSheet<T>> {
+  /// List of items filtered based on the search query.
   List<T> filteredItems = [];
+
+  /// The current search query.
   String searchQuery = '';
 
   @override
@@ -53,12 +86,11 @@ class SearchSheetState<T> extends State<SearchSheet<T>> {
     filteredItems = widget.items;
   }
 
+  /// Updates the search query and filters the items accordingly.
   void _updateSearch(String query) {
     setState(() {
       searchQuery = query;
-      filteredItems = widget.items
-          .where((item) => widget.searchCriteria(item, query))
-          .toList();
+      filteredItems = widget.items.where((item) => widget.searchCriteria(item, query)).toList();
     });
   }
 
@@ -75,13 +107,9 @@ class SearchSheetState<T> extends State<SearchSheet<T>> {
             TextField(
               onChanged: _updateSearch,
               decoration: widget.searchFieldDecoration ??
-                  InputDecoration(
-                      labelText: widget.labelText,
-                      border: const OutlineInputBorder()),
+                  InputDecoration(labelText: widget.labelText, border: const OutlineInputBorder()),
             ),
-            // Seçili öğelerin gösterimi sadece multiSelect modunda ve showSelectedItems true iken yapılır
-            if (widget.controller.type == SearchSheetType.multiSelect &&
-                widget.showSelectedItems)
+            if (widget.controller.type == SearchSheetType.multiSelect && widget.showSelectedItems)
               Consumer<SearchSheetController<T>>(
                 builder: (context, controller, child) {
                   return Wrap(
