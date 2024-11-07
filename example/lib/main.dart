@@ -68,7 +68,13 @@ class SearchExamplePage extends StatelessWidget {
     String title, {
     bool showSelectedItems = false,
   }) {
-    final List<String> items = ["Apple", "Banana", "Cherry", "Date", "Elderberry"];
+    final List<String> items = [
+      "Apple",
+      "Banana",
+      "Cherry",
+      "Date",
+      "Elderberry"
+    ];
     final controller = SearchSheetController<String>(type: type);
 
     showModalBottomSheet(
@@ -78,14 +84,17 @@ class SearchExamplePage extends StatelessWidget {
         return SearchSheet<String>(
           items: items,
           controller: controller,
-          searchCriteria: (item, query) => item.toLowerCase().contains(query.toLowerCase()),
+          searchCriteria: (item, query) =>
+              item.toLowerCase().contains(query.toLowerCase()),
           itemBuilder: (context, item) => ListTile(
             title: Text(item),
             trailing: Consumer<SearchSheetController<String>>(
               builder: (context, controller, child) {
                 return Icon(
                   Icons.check_circle,
-                  color: controller.selectedItems.contains(item) ? Colors.green : Colors.grey,
+                  color: controller.selectedItems.contains(item)
+                      ? Colors.green
+                      : Colors.grey,
                 );
               },
             ),

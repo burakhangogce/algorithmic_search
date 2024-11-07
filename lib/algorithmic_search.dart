@@ -90,7 +90,9 @@ class SearchSheetState<T> extends State<SearchSheet<T>> {
   void _updateSearch(String query) {
     setState(() {
       searchQuery = query;
-      filteredItems = widget.items.where((item) => widget.searchCriteria(item, query)).toList();
+      filteredItems = widget.items
+          .where((item) => widget.searchCriteria(item, query))
+          .toList();
     });
   }
 
@@ -107,9 +109,12 @@ class SearchSheetState<T> extends State<SearchSheet<T>> {
             TextField(
               onChanged: _updateSearch,
               decoration: widget.searchFieldDecoration ??
-                  InputDecoration(labelText: widget.labelText, border: const OutlineInputBorder()),
+                  InputDecoration(
+                      labelText: widget.labelText,
+                      border: const OutlineInputBorder()),
             ),
-            if (widget.controller.type == SearchSheetType.multiSelect && widget.showSelectedItems)
+            if (widget.controller.type == SearchSheetType.multiSelect &&
+                widget.showSelectedItems)
               Consumer<SearchSheetController<T>>(
                 builder: (context, controller, child) {
                   return Wrap(
