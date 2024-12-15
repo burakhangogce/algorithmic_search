@@ -50,6 +50,12 @@ class SearchSheet<T> extends StatefulWidget {
   /// Controls whether selected items are shown at the top.
   final bool showSelectedItems;
 
+  /// Controls whether all items should be shown when the search query is empty.
+  final bool showAllItemsOnEmptyQuery;
+
+  /// Message to display when no items are shown due to an empty query.
+  final String emptyQueryMessage;
+
   /// Creates a new `SearchSheet`.
   const SearchSheet({
     super.key,
@@ -67,6 +73,8 @@ class SearchSheet<T> extends StatefulWidget {
     this.spacing = 8.0,
     this.runSpacing = 4.0,
     this.showSelectedItems = true,
+    this.showAllItemsOnEmptyQuery = true,
+    this.emptyQueryMessage = "No items found. Please type to search.",
   });
 
   @override
@@ -90,9 +98,13 @@ class SearchSheetState<T> extends State<SearchSheet<T>> {
   void _updateSearch(String query) {
     setState(() {
       searchQuery = query;
-      filteredItems = widget.items
-          .where((item) => widget.searchCriteria(item, query))
-          .toList();
+      if (query.isEmpty && !widget.showAllItemsOnEmptyQuery) {
+        filteredItems = [];
+      } else {
+        filteredItems = widget.items
+            .where((item) => widget.searchCriteria(item, query))
+            .toList();
+      }
     });
   }
 
@@ -130,27 +142,41 @@ class SearchSheetState<T> extends State<SearchSheet<T>> {
                   );
                 },
               ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredItems.length,
-                itemBuilder: (context, index) {
-                  final item = filteredItems[index];
-                  return Consumer<SearchSheetController<T>>(
-                    builder: (context, controller, child) {
-                      return GestureDetector(
-                        onTap: () {
-                          controller.toggleSelection(item);
-                          if (widget.onItemSelected != null) {
-                            widget.onItemSelected!(item);
-                          }
-                        },
-                        child: widget.itemBuilder(context, item),
-                      );
-                    },
-                  );
-                },
+            if (searchQuery.isEmpty && !widget.showAllItemsOnEmptyQuery)
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: Text(
+                  widget.emptyQueryMessage,
+                  style: const TextStyle(fontSize: 16, color: Colors.grey),
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
+            if (!widget.showAllItemsOnEmptyQuery && searchQuery.isEmpty) ...{
+              Container()
+            } else if (filteredItems.isNotEmpty ||
+                widget.showAllItemsOnEmptyQuery ||
+                searchQuery.isNotEmpty)
+              Expanded(
+                child: ListView.builder(
+                  itemCount: filteredItems.length,
+                  itemBuilder: (context, index) {
+                    final item = filteredItems[index];
+                    return Consumer<SearchSheetController<T>>(
+                      builder: (context, controller, child) {
+                        return GestureDetector(
+                          onTap: () {
+                            controller.toggleSelection(item);
+                            if (widget.onItemSelected != null) {
+                              widget.onItemSelected!(item);
+                            }
+                          },
+                          child: widget.itemBuilder(context, item),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
           ],
         ),
       ),

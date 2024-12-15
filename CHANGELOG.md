@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.0.2
+
+### New Features
+- **Conditional Item Display**: Added a new parameter `showAllItemsOnEmptyQuery` to control whether all items are displayed when the search query is empty.
+  - Default: `true`.
+  - If set to `false`, the list is hidden when the query is empty.
+- **Empty Query Message**: Added a parameter `emptyQueryMessage` to display a custom message when no items are shown due to an empty query.
+  - Default: `"No items found. Please type to search."`
+
 ## 0.0.1
 
 - Initial release of `algorithmic_search` package.
